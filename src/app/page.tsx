@@ -1,5 +1,6 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
+import About from "@/components/About";
 import ProjectGrid from "@/components/ProjectGrid";
 import ImpactBar from "@/components/ImpactBar";
 import Skills from "@/components/Skills";
@@ -13,6 +14,7 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
+        <About />
         <ProjectGrid />
         <ImpactBar />
         <Skills />

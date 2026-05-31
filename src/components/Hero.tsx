@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
@@ -12,15 +11,13 @@ const stats = [
 ];
 
 export default function Hero() {
-  const [videoOpen, setVideoOpen] = useState(false);
-
   return (
     <section
       id="hero"
       className="min-h-screen flex flex-col justify-center pt-16 px-6 max-w-6xl mx-auto"
     >
       <div className="grid lg:grid-cols-2 gap-16 items-center py-24">
-        {/* Left — text + CTAs + stats */}
+        {/* Left — text + stats */}
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
@@ -34,19 +31,15 @@ export default function Hero() {
             <br />
             <span className="text-[#1a56db]">Govind</span>
           </h1>
-          <p className="text-xl text-[#374151] mb-4 leading-relaxed font-light">
-            Senior Data Product Manager · 15.5+ years building BI &amp; analytics
-            platforms at scale.
-          </p>
-          <p className="text-base text-[#6b7280] mb-10 leading-relaxed max-w-lg">
-            Currently leading 16 Commercial BI products at{" "}
-            <span className="text-[#111] font-medium">A.P. Moller – Maersk</span> — from
-            AI-powered chatbots to $59M revenue-generating analytics engines. I turn
-            complex data into decisions that move the needle for commercial teams
-            operating at global scale.
+          <p className="text-base text-[#374151] mb-10 leading-relaxed max-w-lg">
+            I&apos;ve spent 16 years watching organisations sit on oceans of data while the
+            people who need it most — sales teams chasing a deal, captains managing a
+            fleet, finance leaders closing a quarter — work around it instead of with it.
+            That gap between data that exists and data that actually gets used is the
+            problem I&apos;ve been obsessed with solving.
           </p>
 
-          {/* CTAs */}
+          {/* CTA */}
           <div className="flex flex-wrap gap-4 mb-10">
             <a
               href="#projects"
@@ -54,17 +47,12 @@ export default function Hero() {
             >
               View Projects
             </a>
-            <button
-              onClick={() => setVideoOpen(true)}
+            <a
+              href="#about"
               className="inline-flex items-center gap-2 border border-[#e5e7eb] text-[#111] px-6 py-3 rounded-full text-sm font-medium hover:border-[#111] transition-colors duration-200"
             >
-              <span className="w-5 h-5 rounded-full bg-[#111] flex items-center justify-center shrink-0">
-                <svg viewBox="0 0 10 10" className="w-3 h-3 fill-white ml-0.5">
-                  <polygon points="2,1 9,5 2,9" />
-                </svg>
-              </span>
-              Watch Intro
-            </button>
+              About me
+            </a>
           </div>
 
           {/* Stat cards */}
@@ -80,19 +68,6 @@ export default function Hero() {
             ))}
           </div>
 
-          {/* Skill chips */}
-          <div className="flex flex-wrap gap-2 mt-6">
-            {["Power BI", "Azure", "SQL", "Product Strategy", "Machine Learning", "Agile"].map(
-              (skill) => (
-                <span
-                  key={skill}
-                  className="text-xs font-medium px-3 py-1 bg-white border border-[#e5e7eb] rounded-full text-[#374151]"
-                >
-                  {skill}
-                </span>
-              )
-            )}
-          </div>
         </motion.div>
 
         {/* Right — photo */}
@@ -113,30 +88,6 @@ export default function Hero() {
           </div>
         </motion.div>
       </div>
-
-      {/* Video lightbox */}
-      {videoOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
-          onClick={() => setVideoOpen(false)}
-        >
-          <div
-            className="relative w-full max-w-3xl bg-[#111] rounded-2xl overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setVideoOpen(false)}
-              className="absolute top-4 right-4 z-10 text-white/70 hover:text-white text-xl"
-            >
-              ✕
-            </button>
-            {/* Replace with YouTube embed src when ready */}
-            <div className="aspect-video flex items-center justify-center bg-[#1a1a1a] text-white/40 text-sm">
-              <p>Intro video coming soon</p>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }

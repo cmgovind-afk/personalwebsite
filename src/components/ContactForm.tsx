@@ -54,8 +54,9 @@ export default function ContactForm() {
             Let&apos;s talk
           </h2>
           <p className="text-[#6b7280] leading-relaxed mb-8 max-w-md">
-            Whether you want to discuss a data product challenge, an analytics leadership
-            role, or just connect — I&apos;m always open to a conversation.
+            I&apos;m actively exploring what&apos;s next — senior data product and analytics
+            leadership roles where the work connects directly to how a business makes
+            decisions. If that sounds like something worth a conversation, reach out.
           </p>
           <div className="space-y-4">
             <a

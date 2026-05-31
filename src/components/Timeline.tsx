@@ -22,7 +22,7 @@ export default function Timeline() {
         </p>
         <h2 className="font-serif text-4xl font-bold text-[#111]">Experience</h2>
         <p className="text-[#6b7280] mt-3 max-w-xl">
-          15.5+ years building data products and analytics platforms across logistics,
+          16+ years building data products and analytics platforms across logistics,
           healthcare, and telecoms.
         </p>
       </motion.div>

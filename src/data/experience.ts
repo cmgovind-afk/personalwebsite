@@ -103,5 +103,5 @@ export const impactStats: ImpactStat[] = [
   { value: 95, suffix: "%", label: "On-time roadmap delivery" },
   { value: 16, suffix: "", label: "Commercial BI products" },
   { value: 300, suffix: " FTE", label: "Capacity unlocked" },
-  { value: 15.5, suffix: "+ yrs", decimals: 1, label: "Career experience" },
+  { value: 16, suffix: "+ yrs", label: "Career experience" },
 ];
