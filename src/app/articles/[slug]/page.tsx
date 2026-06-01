@@ -6,7 +6,7 @@ import ArticleComments from "@/components/ArticleComments";
 import AdoptionByIndustryChart from "@/components/charts/AdoptionByIndustryChart";
 import type { Metadata } from "next";
 
-const SITE_URL = "https://personalwebsite-rho-gray.vercel.app";
+const SITE_URL = "https://cmgovind.com";
 
 const chartMap: Record<string, React.ReactNode> = {
   "adoption-by-industry": <AdoptionByIndustryChart />,
