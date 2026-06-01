@@ -1,33 +1,51 @@
 const TEXT =
-  "Open to Senior Data Product, Analytics Leadership & Engineering Manager roles  ·  Based in Copenhagen, Denmark — open to relocation or remote  ·  16 years turning complex data into products people actually use  ·  Available for the right conversation — cm.govind@gmail.com  ·  ";
+  "Open to Senior Data Product, Analytics Leadership & Engineering Manager roles. Fill in the contact form below to reach out.   ·   ";
 
 export default function Ticker() {
-  // Duplicate so the marquee loops seamlessly
-  const content = TEXT + TEXT;
-
   return (
     <div
-      className="fixed top-0 left-0 right-0 z-50 h-9 bg-[#0f172a] overflow-hidden flex items-center"
+      className="fixed bottom-0 left-0 right-0 z-50 overflow-hidden"
+      style={{
+        height: 36,
+        background: "#0f172a",
+        borderTop: "1px solid rgba(255,255,255,0.12)",
+      }}
       aria-label="Availability and contact information"
     >
       <style>{`
-        @keyframes ticker {
+        @keyframes ticker-bottom {
           0%   { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        .ticker-inner {
+        .ticker-b {
           display: flex;
           white-space: nowrap;
-          animation: ticker 70s linear infinite;
+          height: 100%;
+          align-items: center;
+          animation: ticker-bottom 80s linear infinite;
           will-change: transform;
         }
         @media (max-width: 768px) {
-          .ticker-inner { animation-duration: 45s; }
+          .ticker-b { animation-duration: 50s; font-size: 10px !important; }
+          .ticker-wrap { height: 28px !important; }
         }
       `}</style>
-      <div className="ticker-inner text-white/70 text-[13px] font-medium tracking-wide">
-        <span>{content}</span>
-        <span aria-hidden="true">{content}</span>
+      <div
+        className="ticker-wrap"
+        style={{ height: 36, overflow: "hidden", display: "flex", alignItems: "center" }}
+      >
+        <div
+          className="ticker-b"
+          style={{
+            color: "rgba(255,255,255,0.55)",
+            fontSize: 11,
+            fontWeight: 400,
+            letterSpacing: "0.06em",
+          }}
+        >
+          <span>{TEXT}</span>
+          <span aria-hidden="true">{TEXT}</span>
+        </div>
       </div>
     </div>
   );

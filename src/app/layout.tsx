@@ -40,9 +40,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable} scroll-smooth`}>
       <body className="bg-[#F9F9F7] text-[#111] antialiased">
+        {/* pb-9 = 36px so last section content clears the bottom ticker */}
+        <div className="pb-9">{children}</div>
         <Ticker />
-        {/* pt-9 = 36px to clear the ticker height */}
-        <div className="pt-9">{children}</div>
       </body>
     </html>
   );

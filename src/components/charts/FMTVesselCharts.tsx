@@ -86,7 +86,7 @@ export default function FMTVesselCharts() {
               <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
               <XAxis dataKey="month" tick={{ fontSize: 9 }} tickLine={false} />
               <YAxis domain={[60, 95]} tick={{ fontSize: 9 }} tickLine={false} />
-              <Tooltip formatter={(v: number) => [`${v}%`, "Reliability"]} contentStyle={{ fontSize: 11 }} />
+              <Tooltip formatter={(v) => [`${v}%`, "Reliability"]} contentStyle={{ fontSize: 11 }} />
               <ReferenceLine y={85} stroke="#1a56db" strokeDasharray="4 4" label={{ value: "Target 85%", position: "right", fontSize: 9, fill: "#1a56db" }} />
               <ReferenceLine x="Apr" stroke="#059669" strokeDasharray="3 3" label={{ value: "Launch", position: "top", fontSize: 9, fill: "#059669" }} />
               <Line type="monotone" dataKey="reliability" stroke="#1a56db" strokeWidth={2} dot={false} />
