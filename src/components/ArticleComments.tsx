@@ -29,6 +29,8 @@ const REACTIONS: { type: ReactionType; emoji: string; label: string }[] = [
   { type: "support",    emoji: "🤝", label: "Support" },
 ];
 
+const ADMIN_KEY = "cmg_admin";
+
 interface FormData { name: string; email: string; body: string; }
 
 function initials(name: string) {
@@ -57,7 +59,21 @@ function avatarColor(name: string) {
 export default function ArticleComments({ slug }: { slug: string }) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [adminToken, setAdminToken] = useState<string | null>(null);
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
+
+  // Check for admin token in localStorage and URL param on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlSecret = params.get("admin");
+    if (urlSecret) {
+      localStorage.setItem(ADMIN_KEY, urlSecret);
+      // Clean URL without reloading
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+    const stored = localStorage.getItem(ADMIN_KEY);
+    if (stored) setAdminToken(stored);
+  }, []);
 
   useEffect(() => {
     fetch(`/api/comments?slug=${slug}`)
@@ -88,7 +104,6 @@ export default function ArticleComments({ slug }: { slug: string }) {
     const already = localStorage.getItem(key);
     const delta = already ? -1 : 1;
 
-    // Optimistic update
     setComments((prev) =>
       prev.map((c) =>
         c.id === commentId
@@ -107,9 +122,32 @@ export default function ArticleComments({ slug }: { slug: string }) {
     });
   };
 
+  const handleDelete = async (commentId: string) => {
+    if (!adminToken) return;
+    if (!confirm("Delete this comment?")) return;
+
+    const res = await fetch(`/api/comments/${commentId}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${adminToken}` },
+    });
+
+    if (res.ok) {
+      setComments((prev) => prev.filter((c) => c.id !== commentId));
+    } else {
+      alert("Delete failed — check your admin token.");
+    }
+  };
+
   return (
     <section className="mt-16 pt-8 border-t border-[#e5e7eb]">
-      <h2 className="font-serif text-2xl font-bold text-[#111] mb-8">Comments</h2>
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="font-serif text-2xl font-bold text-[#111]">Comments</h2>
+        {adminToken && (
+          <span className="text-xs text-[#059669] font-medium px-2.5 py-1 bg-[#ecfdf5] rounded-full border border-[#059669]/20">
+            Admin mode
+          </span>
+        )}
+      </div>
 
       {/* Comment form */}
       <form onSubmit={handleSubmit(onSubmit)} className="mb-12 space-y-4 bg-white rounded-2xl border border-[#e5e7eb] p-6">
@@ -125,7 +163,9 @@ export default function ArticleComments({ slug }: { slug: string }) {
             {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
           </div>
           <div>
-            <label className="text-xs font-medium text-[#6b7280] block mb-1.5">Email <span className="text-[#9ca3af] font-normal">(kept private)</span></label>
+            <label className="text-xs font-medium text-[#6b7280] block mb-1.5">
+              Email <span className="text-[#9ca3af] font-normal">(kept private)</span>
+            </label>
             <input
               {...register("email", { required: "Required", pattern: { value: /^\S+@\S+\.\S+$/, message: "Invalid email" } })}
               type="email"
@@ -163,18 +203,32 @@ export default function ArticleComments({ slug }: { slug: string }) {
         <div className="space-y-6">
           {comments.map((c) => (
             <div key={c.id} className="bg-white rounded-2xl border border-[#e5e7eb] p-6">
-              <div className="flex items-start gap-3 mb-3">
-                <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-                  style={{ backgroundColor: avatarColor(c.name) }}
-                >
-                  {initials(c.name)}
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="flex items-start gap-3">
+                  <div
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
+                    style={{ backgroundColor: avatarColor(c.name) }}
+                  >
+                    {initials(c.name)}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-[#111]">{c.name}</p>
+                    <p className="text-xs text-[#9ca3af]">{relativeDate(c.created_at)}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-semibold text-[#111]">{c.name}</p>
-                  <p className="text-xs text-[#9ca3af]">{relativeDate(c.created_at)}</p>
-                </div>
+
+                {/* Delete button — only visible in admin mode */}
+                {adminToken && (
+                  <button
+                    onClick={() => handleDelete(c.id)}
+                    title="Delete comment"
+                    className="shrink-0 text-xs text-[#ef4444] hover:text-white hover:bg-[#ef4444] border border-[#ef4444]/30 hover:border-[#ef4444] px-2.5 py-1 rounded-full transition-all duration-150"
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
+
               <p className="text-sm text-[#374151] leading-relaxed mb-4">{c.body}</p>
 
               {/* Reactions */}
