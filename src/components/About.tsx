@@ -38,7 +38,7 @@ const dayInLife = [
     time: "Weekly",
     title: "Engineering sync",
     description:
-      "Not to check on people — to clear blockers, make the one call only I can make (does this scope change go to the CCO or do we absorb it?), and protect the team's time from the next thing coming over the wall.",
+      "Not to check on people, but to clear blockers, make the one call only I can make (does this scope change go to the CCO or do we absorb it?), and protect the team's time from the next thing coming over the wall.",
   },
   {
     time: "As needed (major changes)",
@@ -112,8 +112,8 @@ export default function About() {
             my career, the better CEOs were already treating data as the foundation of their
             decisions — not a reporting function, not IT&apos;s problem, but the actual basis for
             how a business moves. I saw early that if you could work at that level, you could
-            create real impact without needing to be the loudest person in the room. Numbers
-            don&apos;t care about office politics.
+            change how decisions get made without needing to be the loudest person in the room.
+            Numbers don&apos;t care about office politics.
           </p>
 
           <p className="text-[#374151] leading-relaxed">
@@ -128,7 +128,7 @@ export default function About() {
             When I push back on an engineering estimate, I&apos;m not guessing. I&apos;ve built the
             thing. I know what the minimum viable version actually takes. When a data scientist
             tells me a model needs three more months, I can have a specific conversation about
-            which three months — the tuning, the validation, or the politics of getting it
+            which three months: the tuning, the validation, or the politics of getting it
             signed off. A business manager without that background can&apos;t do that. It&apos;s not a
             skill I learned in a course. It&apos;s 10 years of scar tissue.
           </p>
@@ -136,7 +136,7 @@ export default function About() {
           <p className="text-[#374151] leading-relaxed">
             Right now I run Commercial BI at Maersk: 16 products, 10,000+ users, Copenhagen
             and Dubai. The work looks nothing like where I started. But the reason it works is
-            the same — I still think in 1s and 0s, and I still believe the most honest thing
+            the same: I still think in 1s and 0s, and I still believe the most honest thing
             you can show a business is its own data.
           </p>
 

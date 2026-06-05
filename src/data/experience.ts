@@ -27,7 +27,7 @@ export const experience: ExperienceEntry[] = [
       "Lead a portfolio of 16 Commercial BI products with 5 Product Owners (direct) and 12 data engineers (dotted line) across Copenhagen and Dubai.",
       "Delivered 95%+ on-time roadmap across 40 stories/sprint, reducing post-release escalations 70% and improving stakeholder CSAT ~7%.",
       "Launched Maersk's first enterprise AI-powered BI Chatbot (Microsoft Copilot + Azure Foundry), expanding governed BI adoption from 7,000 to 10,000+ users.",
-      "Built the Customer Profitability Engine generating ~$59M incremental revenue and the Cost-to-Serve ABC model unlocking ~300 FTE capacity.",
+      "Built the Customer Profitability Engine generating ~$59M incremental revenue and the Cost-to-Serve ABC model identifying ~300 FTE capacity for reallocation.",
       "Led the Commercial BI team to formal recognition as Preferred Analytics Partner by the Chief Commercial Officer and Commercial ELT.",
     ],
     tags: ["Power BI", "Azure", "Agile", "Product Strategy", "People Leadership"],
@@ -91,7 +91,7 @@ export const experience: ExperienceEntry[] = [
     location: "Noida, India & Ipswich, England",
     highlights: [
       "Delivered revenue assurance analytics and RFT/CT process improvement for British Telecom using SQL and Excel-based analysis.",
-      "Conducted time-motion studies on-site at BT UK headquarters supporting cross-functional performance improvement programs.",
+      "Conducted time-motion studies on-site at BT UK headquarters in Ipswich, supporting process improvement programs across BT's UK operations.",
     ],
     tags: ["SQL", "Excel", "Revenue Assurance", "Process Improvement"],
   },
