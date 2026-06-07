@@ -36,13 +36,26 @@ export default function Hero() {
             <br />
             <span className="text-[#1a56db]">Govind</span>
           </h1>
-          <p className="text-base text-[#374151] mb-10 leading-relaxed max-w-lg">
-            I&apos;ve spent 16 years watching organisations sit on oceans of data while the
-            people who need it most — sales teams chasing a deal, captains managing a
-            fleet, finance leaders closing a quarter — work around it instead of with it.
-            That gap between data that exists and data that actually gets used is the
-            problem I&apos;ve been obsessed with solving.
-          </p>
+          <div className="text-base text-[#374151] mb-10 leading-relaxed max-w-lg space-y-4">
+            <p>
+              For more than 16 years, I&apos;ve worked with leaders facing the same challenge.
+              Decisions slow down because teams don&apos;t trust the numbers and the opportunities
+              get missed while discussions focus on whose numbers are right rather than what
+              action should be taken.
+            </p>
+            <p>
+              I help organizations create clarity by building trusted analytics products,
+              performance frameworks, and governance models that help people align on the facts
+              and focus on what to do next.
+            </p>
+            <p className="font-medium text-[#111]">
+              Student of business systems and decision making. Builder of products, teams, and
+              trusted partnerships.
+            </p>
+            <p className="text-[#6b7280]">
+              Father to two beautiful daughters and husband to a wonderful wife.
+            </p>
+          </div>
 
           {/* CTAs */}
           <div className="flex flex-wrap gap-4 mb-10">

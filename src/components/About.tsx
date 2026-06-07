@@ -100,44 +100,27 @@ export default function About() {
           </blockquote>
 
           <p className="text-[#374151] leading-relaxed">
-            I&apos;ve always thought in 1s and 0s. Not because I&apos;m incapable of intuition, but
-            because I&apos;ve watched arguments built on perception run in circles for years while
-            the same argument made with data gets resolved in one meeting. Data doesn&apos;t have
-            a frame of reference. It doesn&apos;t care what you assumed going in. That&apos;s what I
-            find useful about it.
+            I enjoy taking complex problems apart, identifying the few things that matter,
+            and building practical solutions that people trust and use.
           </p>
 
           <p className="text-[#374151] leading-relaxed">
-            I was drawn to this field before I had any reason to be. By 2010 when I started
-            my career, the better CEOs were already treating data as the foundation of their
-            decisions — not a reporting function, not IT&apos;s problem, but the actual basis for
-            how a business moves. I saw early that if you could work at that level, you could
-            change how decisions get made without needing to be the loudest person in the room.
-            Numbers don&apos;t care about office politics.
+            Over the years, I&apos;ve learned that symptoms are often mistaken for problems.
+            Declining margins, missed targets, low adoption, customer churn, or rising costs
+            may signal that something is wrong, but they rarely explain why. The real work
+            begins by understanding the factors underneath and separating causes from effects.
           </p>
 
           <p className="text-[#374151] leading-relaxed">
-            I&apos;ve sat on both sides. The first decade of my career was engineering and analysis
-            — building things myself, writing queries, figuring out why the pipeline broke at
-            2am and how to explain it to a client by 9. I crossed to product and business
-            leadership later. Most people in this job came from one direction or the other.
-            That matters more than it sounds.
+            I&apos;ve found that teams often move quickly toward solutions while working from
+            different assumptions about the problem itself. Taking the time to frame the
+            problem correctly creates alignment and usually leads to better decisions, stronger
+            execution, and more sustainable outcomes.
           </p>
 
-          <p className="text-[#374151] leading-relaxed">
-            When I push back on an engineering estimate, I&apos;m not guessing. I&apos;ve built the
-            thing. I know what the minimum viable version actually takes. When a data scientist
-            tells me a model needs three more months, I can have a specific conversation about
-            which three months: the tuning, the validation, or the politics of getting it
-            signed off. A business manager without that background can&apos;t do that. It&apos;s not a
-            skill I learned in a course. It&apos;s 10 years of scar tissue.
-          </p>
-
-          <p className="text-[#374151] leading-relaxed">
-            Right now I run Commercial BI at Maersk: 16 products, 10,000+ users, Copenhagen
-            and Dubai. The work looks nothing like where I started. But the reason it works is
-            the same: I still think in 1s and 0s, and I still believe the most honest thing
-            you can show a business is its own data.
+          <p className="text-[#374151] leading-relaxed font-medium text-[#111]">
+            That&apos;s why I spend as much time understanding the question as I do building
+            the answer.
           </p>
 
           {/* Accordion */}
