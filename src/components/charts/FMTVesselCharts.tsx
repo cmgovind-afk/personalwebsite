@@ -1,142 +1,202 @@
 "use client";
 
+import React from "react";
 import {
-  LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  Tooltip, ReferenceLine, ResponsiveContainer, Cell, Legend,
+  ComposedChart, Bar, Line, XAxis, YAxis,
+  CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer, Legend,
 } from "recharts";
 
-const reliabilityData = [
-  { month: "Jan", reliability: 71 }, { month: "Feb", reliability: 69 },
-  { month: "Mar", reliability: 72 }, { month: "Apr", reliability: 74 },
-  { month: "May", reliability: 77 }, { month: "Jun", reliability: 80 },
-  { month: "Jul", reliability: 82 }, { month: "Aug", reliability: 83 },
-  { month: "Sep", reliability: 85 }, { month: "Oct", reliability: 86 },
-  { month: "Nov", reliability: 87 }, { month: "Dec", reliability: 88 },
+/* ── Data ────────────────────────────────────────────────────────── */
+
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+const safetyData = MONTHS.map((m, i) => ({
+  month: m,
+  SOC:      [12,14,11,16,15,18,13,17,14,15,16,14][i],
+  TRC:      [2,1,2,1,0,1,2,1,1,0,1,0][i],
+  NearMiss: [5,4,6,3,5,4,3,5,4,3,4,3][i],
+}));
+
+const SFOC_RAW = [168,172,165,170,163,167,162,165,158,163,160,157];
+const fuelData = MONTHS.map((m, i) => ({
+  month: m,
+  SFOC:  SFOC_RAW[i],
+  Roll3: i >= 2
+    ? Math.round(((SFOC_RAW[i] + SFOC_RAW[i - 1] + SFOC_RAW[i - 2]) / 3) * 10) / 10
+    : undefined,
+  CompP: [85,84,83,84,82,83,81,82,80,81,80,79][i],
+}));
+
+const voyageData = [
+  { vessel: "Alpha",   TonNM: 118, Speed: 13.2, Wait: 8  },
+  { vessel: "Beta",    TonNM: 124, Speed: 13.8, Wait: 5  },
+  { vessel: "Gamma",   TonNM: 109, Speed: 12.4, Wait: 11 },
+  { vessel: "Delta",   TonNM: 127, Speed: 14.1, Wait: 4  },
+  { vessel: "Epsilon", TonNM: 114, Speed: 12.9, Wait: 9  },
 ];
 
-const fuelData = [
-  { quarter: "Q1", before: 542, after: 542 },
-  { quarter: "Q2", before: 538, after: 501 },
-  { quarter: "Q3", before: 535, after: 478 },
-  { quarter: "Q4", before: 531, after: 461 },
-];
+const assetData = MONTHS.map((m, i) => ({
+  month: m,
+  RM:      [280,210,340,190,260,220,310,180,240,195,270,205][i],
+  Overhaul:[0,0,450,0,0,0,380,0,0,0,420,0][i],
+  OffSvc:  [48,36,72,24,56,40,68,28,44,32,64,38][i],
+}));
 
-const breakdownData = [
-  { month: "Jan", count: 17 }, { month: "Feb", count: 15 },
-  { month: "Mar", count: 16 }, { month: "Apr", count: 14 },
-  { month: "May", count: 11 }, { month: "Jun", count: 9 },
-  { month: "Jul", count: 7  }, { month: "Aug", count: 6  },
-  { month: "Sep", count: 5  }, { month: "Oct", count: 5  },
-  { month: "Nov", count: 4  }, { month: "Dec", count: 4  },
-];
+/* ── Shared style tokens ─────────────────────────────────────────── */
 
-function barColor(count: number) {
-  if (count > 10) return "#ef4444";
-  if (count > 5)  return "#f59e0b";
-  return "#22c55e";
-}
+const TICK = { fontSize: 9, fill: "#6b7280" };
+const GRID = { strokeDasharray: "3 3" as const, stroke: "#f0f0ef" };
+const TIP  = {
+  contentStyle: { fontSize: 10, padding: "4px 8px", border: "1px solid #e5e7eb", borderRadius: 6 },
+  itemStyle: { padding: "1px 0" },
+};
+const AXIS = { tickLine: false as const, axisLine: false as const };
+const LEG  = { iconSize: 8, wrapperStyle: { fontSize: 9 } };
 
-/* ── Gauge (SVG arc) ─────────────────────────────── */
-function Gauge({ value }: { value: number }) {
-  const pct = value / 10;
-  const r = 60, cx = 80, cy = 75;
-  const startAngle = Math.PI;
-  const endAngle = 0;
-  const angle = startAngle + pct * (endAngle - startAngle);
-  const needleX = cx + r * Math.cos(angle);
-  const needleY = cy + r * Math.sin(angle);
+/* ── Panel wrapper ───────────────────────────────────────────────── */
 
-  const arc = (start: number, end: number, color: string) => {
-    const x1 = cx + r * Math.cos(start), y1 = cy + r * Math.sin(start);
-    const x2 = cx + r * Math.cos(end),   y2 = cy + r * Math.sin(end);
-    return (
-      <path
-        d={`M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}`}
-        stroke={color} strokeWidth={14} fill="none" strokeLinecap="butt"
-      />
-    );
-  };
-
+function Panel({ title, subtitle, children }: {
+  title: string;
+  subtitle: string;
+  children: React.ReactNode;
+}) {
   return (
-    <svg width="160" height="90" viewBox="0 0 160 90" className="mx-auto">
-      {arc(Math.PI, Math.PI * (1 - 0.2), "#22c55e")}
-      {arc(Math.PI * (1 - 0.2), Math.PI * (1 - 0.5), "#f59e0b")}
-      {arc(Math.PI * (1 - 0.5), 0, "#ef4444")}
-      <line x1={cx} y1={cy} x2={needleX} y2={needleY} stroke="#111" strokeWidth={2.5} strokeLinecap="round" />
-      <circle cx={cx} cy={cy} r={4} fill="#111" />
-      <text x={cx} y={cy + 20} textAnchor="middle" fontSize={13} fontWeight={700} fill="#111">{value}</text>
-      <text x={cx} y={cy + 33} textAnchor="middle" fontSize={9} fill="#9ca3af">/ 10</text>
-    </svg>
+    <div className="bg-white rounded-xl border border-[#e5e7eb] p-4">
+      <p className="text-[11px] font-semibold text-[#111] leading-tight">{title}</p>
+      <p className="text-[9px] text-[#9ca3af] mt-0.5 mb-3 leading-tight">{subtitle}</p>
+      {children}
+    </div>
   );
 }
 
+/* ── Main component ──────────────────────────────────────────────── */
+
 export default function FMTVesselCharts() {
   return (
-    <div className="rounded-2xl border border-[#e5e7eb] bg-white p-6">
-      <p className="text-sm font-semibold text-[#111] mb-1">Fleet Performance Dashboard</p>
-      <p className="text-xs text-[#9ca3af] mb-6 italic">Illustrative only — design reference, not real Maersk data.</p>
+    <div className="rounded-2xl border border-[#e5e7eb] bg-[#F9F9F7] p-5">
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      {/* Dashboard header */}
+      <div className="mb-4 pb-3 border-b border-[#e5e7eb]">
+        <p className="text-sm font-bold text-[#111]">FMT Vessel Performance Dashboard</p>
+        <p className="text-[11px] text-[#6b7280] mt-0.5">
+          Unified performance view across Fleet, Safety &amp; Resilience, and Asset Management
+        </p>
+        <p className="text-[9px] text-[#9ca3af] mt-1 italic">
+          Illustrative only — design reference, not real Maersk data.
+        </p>
+      </div>
 
-        {/* Chart 1 — Schedule Reliability */}
-        <div>
-          <p className="text-xs font-semibold text-[#374151] mb-3">Schedule Reliability (%)</p>
-          <ResponsiveContainer width="100%" height={180}>
-            <LineChart data={reliabilityData} margin={{ top: 8, right: 8, bottom: 0, left: -20 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-              <XAxis dataKey="month" tick={{ fontSize: 9 }} tickLine={false} />
-              <YAxis domain={[60, 95]} tick={{ fontSize: 9 }} tickLine={false} />
-              <Tooltip formatter={(v) => [`${v}%`, "Reliability"]} contentStyle={{ fontSize: 11 }} />
-              <ReferenceLine y={85} stroke="#1a56db" strokeDasharray="4 4" label={{ value: "Target 85%", position: "right", fontSize: 9, fill: "#1a56db" }} />
-              <ReferenceLine x="Apr" stroke="#059669" strokeDasharray="3 3" label={{ value: "Launch", position: "top", fontSize: 9, fill: "#059669" }} />
-              <Line type="monotone" dataKey="reliability" stroke="#1a56db" strokeWidth={2} dot={false} />
-            </LineChart>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+        {/* TOP LEFT — Safety Performance */}
+        <Panel
+          title="Safety Performance Overview"
+          subtitle="SOC report count vs. target · TRC trend · Near Miss trend"
+        >
+          <ResponsiveContainer width="100%" height={185}>
+            <ComposedChart data={safetyData} margin={{ top: 4, right: 14, bottom: 0, left: -22 }}>
+              <CartesianGrid {...GRID} />
+              <XAxis dataKey="month" tick={TICK} {...AXIS} />
+              <YAxis yAxisId="soc" tick={TICK} {...AXIS} domain={[0, 25]} />
+              <YAxis yAxisId="inc" orientation="right" tick={TICK} {...AXIS} domain={[0, 8]} />
+              <Tooltip {...TIP} />
+              <Legend {...LEG} />
+              <ReferenceLine
+                yAxisId="soc" y={15} stroke="#16a34a" strokeDasharray="4 3"
+                label={{ value: "Target 15", position: "insideTopRight", fontSize: 8, fill: "#16a34a" }}
+              />
+              <Bar yAxisId="soc" dataKey="SOC" name="SOC Reports" fill="#bfdbfe" radius={[2, 2, 0, 0]} />
+              <Line yAxisId="inc" dataKey="TRC" name="TRC" stroke="#dc2626" strokeWidth={1.5} dot={{ r: 2 }} />
+              <Line
+                yAxisId="inc" dataKey="NearMiss" name="Near Miss"
+                stroke="#d97706" strokeWidth={1.5} dot={{ r: 2 }} strokeDasharray="3 3"
+              />
+            </ComposedChart>
           </ResponsiveContainer>
-        </div>
+        </Panel>
 
-        {/* Chart 2 — Safety Incidents Gauge */}
-        <div>
-          <p className="text-xs font-semibold text-[#374151] mb-2">Safety Incidents (monthly avg)</p>
-          <Gauge value={1.2} />
-          <p className="text-center text-[10px] text-[#6b7280] mt-1">Target: 0 · Current: 1.2</p>
-          <p className="text-center text-[10px] text-[#9ca3af]">High-risk breakdown events per month</p>
-        </div>
-
-        {/* Chart 3 — Fuel Usage */}
-        <div>
-          <p className="text-xs font-semibold text-[#374151] mb-3">Avg Fuel Usage per Voyage (MT)</p>
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={fuelData} margin={{ top: 8, right: 8, bottom: 0, left: -20 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-              <XAxis dataKey="quarter" tick={{ fontSize: 9 }} tickLine={false} />
-              <YAxis domain={[400, 580]} tick={{ fontSize: 9 }} tickLine={false} />
-              <Tooltip contentStyle={{ fontSize: 11 }} />
-              <Legend iconSize={8} wrapperStyle={{ fontSize: 9 }} />
-              <Bar dataKey="before" name="Before" fill="#6b7280" radius={[3, 3, 0, 0]} />
-              <Bar dataKey="after" name="After" fill="#22c55e" radius={[3, 3, 0, 0]} />
-            </BarChart>
+        {/* TOP RIGHT — Fuel Efficiency & Engine Health */}
+        <Panel
+          title="Fuel Efficiency & Engine Health"
+          subtitle="LCV Corrected SFOC (g/kWh) · UCL/LCL · 3M rolling avg · Compression pressure"
+        >
+          <ResponsiveContainer width="100%" height={185}>
+            <ComposedChart data={fuelData} margin={{ top: 4, right: 14, bottom: 0, left: -22 }}>
+              <CartesianGrid {...GRID} />
+              <XAxis dataKey="month" tick={TICK} {...AXIS} />
+              <YAxis yAxisId="sfoc" tick={TICK} {...AXIS} domain={[145, 185]} />
+              <YAxis yAxisId="comp" orientation="right" tick={TICK} {...AXIS} domain={[70, 95]} />
+              <Tooltip {...TIP} />
+              <Legend {...LEG} />
+              <ReferenceLine
+                yAxisId="sfoc" y={175} stroke="#dc2626" strokeDasharray="4 3"
+                label={{ value: "UCL", position: "insideTopRight", fontSize: 8, fill: "#dc2626" }}
+              />
+              <ReferenceLine
+                yAxisId="sfoc" y={155} stroke="#16a34a" strokeDasharray="4 3"
+                label={{ value: "LCL", position: "insideBottomRight", fontSize: 8, fill: "#16a34a" }}
+              />
+              <Line yAxisId="sfoc" dataKey="SFOC" name="SFOC" stroke="#1e40af" strokeWidth={2} dot={false} />
+              <Line
+                yAxisId="sfoc" dataKey="Roll3" name="3M Avg"
+                stroke="#6b7280" strokeWidth={1.5} strokeDasharray="4 4" dot={false} connectNulls={false}
+              />
+              <Line
+                yAxisId="comp" dataKey="CompP" name="Comp. Press."
+                stroke="#7c3aed" strokeWidth={1.5} strokeDasharray="2 2" dot={false}
+              />
+            </ComposedChart>
           </ResponsiveContainer>
-          <p className="text-center text-[10px] text-[#059669] mt-1">Q4: −15% reduction</p>
-        </div>
+        </Panel>
 
-        {/* Chart 4 — High-Risk Breakdowns */}
-        <div>
-          <p className="text-xs font-semibold text-[#374151] mb-3">High-Risk Breakdowns (monthly count)</p>
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={breakdownData} margin={{ top: 8, right: 8, bottom: 0, left: -20 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-              <XAxis dataKey="month" tick={{ fontSize: 9 }} tickLine={false} />
-              <YAxis domain={[0, 20]} tick={{ fontSize: 9 }} tickLine={false} />
-              <Tooltip contentStyle={{ fontSize: 11 }} />
-              <ReferenceLine y={5} stroke="#1a56db" strokeDasharray="4 4" label={{ value: "Target", position: "right", fontSize: 9, fill: "#1a56db" }} />
-              <Bar dataKey="count" radius={[3, 3, 0, 0]}>
-                {breakdownData.map((d, i) => (
-                  <Cell key={i} fill={barColor(d.count)} />
-                ))}
-              </Bar>
-            </BarChart>
+        {/* BOTTOM LEFT — Voyage Performance */}
+        <Panel
+          title="Voyage Performance"
+          subtitle="Avg Mileage (Ton/NM) · Sea Speed (kn) · Wait Time (hrs) · vessel comparison"
+        >
+          <ResponsiveContainer width="100%" height={185}>
+            <ComposedChart data={voyageData} margin={{ top: 4, right: 14, bottom: 0, left: -22 }}>
+              <CartesianGrid {...GRID} />
+              <XAxis dataKey="vessel" tick={TICK} {...AXIS} />
+              <YAxis yAxisId="tonnm" tick={TICK} {...AXIS} domain={[90, 140]} />
+              <YAxis yAxisId="right" orientation="right" tick={TICK} {...AXIS} domain={[0, 16]} />
+              <Tooltip {...TIP} />
+              <Legend {...LEG} />
+              <Bar yAxisId="tonnm" dataKey="TonNM" name="Avg Mileage (Ton/NM)" fill="#bfdbfe" radius={[3, 3, 0, 0]} />
+              <Line
+                yAxisId="right" dataKey="Speed" name="Sea Speed (kn)"
+                stroke="#1e40af" strokeWidth={2} dot={{ r: 3, fill: "#1e40af" }}
+              />
+              <Line
+                yAxisId="right" dataKey="Wait" name="Wait Time (hrs)"
+                stroke="#f59e0b" strokeWidth={1.5} strokeDasharray="3 3" dot={{ r: 2, fill: "#f59e0b" }}
+              />
+            </ComposedChart>
           </ResponsiveContainer>
-        </div>
+        </Panel>
+
+        {/* BOTTOM RIGHT — Asset & Financial */}
+        <Panel
+          title="Asset & Financial Performance"
+          subtitle="R&M Spend ($K) · Overhaul ($K) · Off-Service Hours · monthly trend"
+        >
+          <ResponsiveContainer width="100%" height={185}>
+            <ComposedChart data={assetData} margin={{ top: 4, right: 14, bottom: 0, left: -22 }}>
+              <CartesianGrid {...GRID} />
+              <XAxis dataKey="month" tick={TICK} {...AXIS} />
+              <YAxis yAxisId="spend" tick={TICK} {...AXIS} domain={[0, 700]} />
+              <YAxis yAxisId="hours" orientation="right" tick={TICK} {...AXIS} domain={[0, 100]} />
+              <Tooltip {...TIP} />
+              <Legend {...LEG} />
+              <Bar yAxisId="spend" dataKey="RM" name="R&M ($K)" stackId="s" fill="#bfdbfe" radius={[0, 0, 0, 0]} />
+              <Bar yAxisId="spend" dataKey="Overhaul" name="Overhaul ($K)" stackId="s" fill="#a78bfa" radius={[2, 2, 0, 0]} />
+              <Line
+                yAxisId="hours" dataKey="OffSvc" name="Off-Service hrs"
+                stroke="#dc2626" strokeWidth={1.5} dot={{ r: 2 }}
+              />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </Panel>
 
       </div>
     </div>

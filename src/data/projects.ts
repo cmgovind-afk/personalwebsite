@@ -64,31 +64,31 @@ export const projects: Project[] = [
   {
     id: "fmt-vessel-dashboard",
     title: "FMT Vessel Dashboard",
-    tagline: "Fleet intelligence for 350+ captains across 11,000+ crew",
+    tagline: "Unified vessel performance view across Fleet, Safety & Resilience, and Asset Management",
     thumbnail: "/images/projects/fmt-vessel.jpg",
-    tags: ["Power BI", "SQL", "Azure", "Fleet Analytics"],
+    tags: ["Power BI", "SQL", "Azure", "UiPath", "Fleet Analytics"],
     filters: ["product-led", "data-engineering"],
     accentColor: "#1e40af",
     problem:
-      "Container shipping runs on schedules. When a vessel falls behind — a port delay, an unplanned maintenance stop, a weather diversion — the effects cascade through hundreds of downstream bookings. The people responsible for managing that complexity, ship captains and fleet operations managers, were working with reporting tools designed for analysts on land, not officers on a bridge.\n\nThe existing FMT dashboard existed but wasn't trusted. Captains weren't using it. Fleet managers were exporting to Excel and building their own views. The data was there. The product wasn't doing its job.",
+      "Fleet Management & Technology operated across three interconnected domains: Fleet, Safety & Resilience, and Asset Management. Each generated valuable performance insights, but they were delivered through separate reports, prepared on different schedules, and distributed independently. Fleet performance reporting arrived separately from Safety reporting, while financial and maintenance indicators were reviewed through their own processes.\n\nFor Vessel Captains and Chief Engineers, this created a fragmented view of vessel health. Understanding the relationship between safety performance, fuel efficiency, maintenance spend, operational reliability, and asset performance required navigating multiple reports and manually connecting the dots. The challenge was not a lack of data. It was a lack of a unified view.",
     whatWeBuilt:
-      "A redesigned Power BI dashboard purpose-built for the operational rhythm of vessel management — schedule reliability tracking, breakdown risk flagging, and maintenance predictors, surfaced at the right level of detail for both bridge crew and shore-side operations.\n\nThe risk flags — particularly the high-risk breakdown predictor — came from pattern analysis across historical maintenance data, translated into a simple traffic light system that needed no analytics training to interpret. The design process included structured sessions with captains and fleet managers: not asking what data they had access to, but what decisions they actually make and what they need to make them well.",
+      "A consolidated vessel performance dashboard that brought together KPIs from Fleet, Safety & Resilience, and Asset Management into a single decision-support product — creating a shared performance language across vessel leadership teams.\n\nA key design principle was helping users distinguish between symptoms and underlying causes. Increased fuel consumption is not a problem by itself — it is an outcome. The underlying drivers could include engine performance degradation, voyage planning decisions, fuel quality issues, or maintenance-related factors. The dashboard was built to help users investigate those relationships rather than simply monitor results.\n\nMost reporting solutions focus on showing what happened. This one focused on helping users understand why it happened. By bringing together leading indicators, lagging indicators, operational metrics, financial measures, and safety performance into a single experience, the product enabled more informed discussions and faster investigations when performance deviated from expected operating conditions.\n\nKPI generation and report distribution were automated through UiPath. Vessel Captains and Chief Engineers received a synchronised performance pack from the same reporting cycle and based on the same KPI definitions — removing the manual effort and version inconsistency that had undermined trust in previous reporting.",
     technicalDepth: {
-      stack: "Power BI · SQL · Azure",
+      stack: "Power BI · SQL · Azure · UiPath",
       architecture:
-        "SQL-backed vessel tracking, maintenance history, and route data integrated into a semantic layer refreshed on operational reporting cycles. Risk flags derived from pattern analysis across historical maintenance records.",
+        "SQL-backed vessel tracking, safety, fuel, and maintenance data unified into a single semantic layer across three previously separate reporting domains. KPI generation and report distribution automated via UiPath — every vessel leadership team receiving the same numbers from the same cycle.",
       engineeringChallenge:
-        "Designing a data model that stayed performant for 350+ concurrent users with varying connectivity — including bridge crew on vessels with limited bandwidth.",
+        "Building a data model that connected leading indicators (safety observations, compression pressure trends) with lagging indicators (fuel consumption, breakdown frequency) across three domains with different reporting cadences and data ownership structures.",
     },
     theNumbers: [
       { value: "+17%", label: "Schedule reliability improvement" },
-      { value: "-29%", label: "High-risk breakdowns" },
-      { value: "56 hrs/mo", label: "Manual reporting effort eliminated (≈1.5 FTE)" },
-      { value: "350+", label: "Captains using the dashboard" },
+      { value: "-29%", label: "High-risk breakdown frequency" },
+      { value: "56 hrs/mo", label: "Manual reporting effort eliminated" },
+      { value: "350+", label: "Vessel Captains on the platform" },
       { value: "11,000+", label: "Crew members across the fleet" },
     ],
     whatILearned:
-      "The users who matter most are often the furthest from the people building the product. A ship captain's working environment — watch schedules, connectivity gaps, the cognitive load of running a vessel — is nothing like an analyst's office. Designing for them meant going to where the work actually happens, not where it gets reported. Every decision about what to show and what to hide came from that. I learned that the most important design question isn't 'what does the data say?' — it's 'what decision does this person need to make in the next five minutes?'",
+      "Symptoms are often mistaken for problems. Fuel consumption, maintenance costs, safety incidents, and off-service events are all important indicators, but they rarely explain themselves. Better decisions happen when those signals are viewed together and investigated as part of a connected system rather than as isolated metrics.\n\nThe design decision that made the biggest difference was building the product around the investigation, not the report. Surfacing relationships between metrics — not just the metrics themselves — is what changes how a captain responds when performance deviates. A dashboard that helps someone ask 'why is my fuel consumption rising?' is more useful than one that simply confirms it has.",
     metrics: [
       { value: 17, suffix: "%", label: "Schedule reliability improvement" },
       { value: 29, suffix: "%", label: "High-risk breakdowns reduced" },
